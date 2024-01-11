@@ -27,8 +27,8 @@ Thumbs.db
 /backend/target/
 
 # Ignore build artifacts and dependencies
-/frontend/node_modules/
-/frontend/dist/
+/node_modules/
+/dist/
 
 # Ignore IntelliJ IDEA files
 /.idea/
@@ -48,3 +48,6 @@ Thumbs.db
 # Ignore system-specific files
 .DS_Store
 Thumbs.db
+.angular/*
+.nx/*
+.vscode/*

@@ -1,6 +1,7 @@
 package odas.dawidszcz.config;
 
 import lombok.RequiredArgsConstructor;
+import odas.dawidszcz.utils.CustomCsrfFilter;
 import odas.dawidszcz.utils.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +26,10 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors().and()
                 .csrf()
-                .disable()
+                .ignoringRequestMatchers("/api/v1/auth/**")
+                .csrfTokenRepository(csrfTokenRepository())
+                .and()
+                .addFilterAfter(new CustomCsrfFilter(), CsrfFilter.class)
                 .authorizeRequests()
                 .requestMatchers("/api/v1/auth/**")
                 .permitAll()
@@ -37,4 +44,10 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
+  private CsrfTokenRepository csrfTokenRepository() {
+    HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+    repository.setHeaderName(CustomCsrfFilter.CSRF_COOKIE_NAME);
+    return repository;
+  }
 }

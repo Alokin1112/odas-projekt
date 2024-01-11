@@ -1,0 +1,71 @@
+<mat-card class="card">
+  <mat-card-title>Register</mat-card-title>
+  <mat-card-content>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="handleSubmit()"
+      class="form"
+    >
+      <mat-form-field>
+        <input
+          matInput
+          formControlName="username"
+          placeholder="Username"
+        >
+        <mat-error *ngIf="form.get('username').hasError('required')">Username is required</mat-error>
+        <mat-error *ngIf="form.get('username').hasError('minlength')">Username must be at least 6 characters
+          long</mat-error>
+        <mat-error *ngIf="form.get('username').hasError('maxlength')">Username cannot exceed 255 characters</mat-error>
+        <mat-error *ngIf="form.get('username').hasError('pattern')">Username must contain only letters and
+          underscores</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+        >
+        <mat-error *ngIf="form.get('password').hasError('required')">Password is required</mat-error>
+        <mat-error *ngIf="form.get('password').hasError('minlength')">Password must be at least 6 characters
+          long</mat-error>
+        <mat-error *ngIf="form.get('password').hasError('maxlength')">Password cannot exceed 255 characters</mat-error>
+        <mat-error *ngIf="form.get('username').hasError('pattern')">Password must contain only letters and
+          underscores</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="password"
+          formControlName="repeatPassword"
+          placeholder="Repeat Password"
+        >
+        <mat-error *ngIf="form.get('repeatPassword').hasError('required')">Repeat Password is required</mat-error>
+        <mat-error *ngIf="form.hasError('passwordMatch')">Passwords do not match</mat-error>
+      </mat-form-field>
+
+      @if(!photoBase64){
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form.invalid"
+      >Register</button>
+      }
+    </form>
+
+    @if (photoBase64) {
+    <h2>Zeskanuj ten kod qr w aplikacji authenticator. <b>UWAGA 2 szansy juz nie będzie</b></h2>
+    <div class="centered">
+      <img
+        [src]="'data:image/jpg;base64,'+photoBase64"
+        class="image"
+      />
+    </div>
+    <a [routerLink]="pathToLogin">Już zeskanowałem zdjęcie przenieś mnie na stronę logowania</a>
+    }
+
+  </mat-card-content>
+</mat-card>

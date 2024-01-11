@@ -140,3 +140,8 @@ a {
 .mat-mdc-raised-button:not(:disabled) {
   color: white !important;
 }
+
+.error-snackbar {
+  background-color: var(--color-error);
+  color: var(--color-whitish);
+}

@@ -39,7 +39,7 @@ public class AuthenticationService  {
     private final  JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    public final static String AUTHENTICATION_SUFFIX ="_FOR_TFA_VERIFICATION_PURPOSES";
+    public final static String AUTHENTICATION_SUFFIX ="-FOR-TFA-VERIFICATION-PURPOSES-123456789";
 
     public AuthenticationResponse register(RegisterDto registerDto){
         if( userRepository.existsByUsername(registerDto.getUsername()) || registerDto.getUsername().endsWith(AUTHENTICATION_SUFFIX)){

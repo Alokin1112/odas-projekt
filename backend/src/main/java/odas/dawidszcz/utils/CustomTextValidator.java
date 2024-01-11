@@ -13,7 +13,7 @@ public class CustomTextValidator implements ConstraintValidator<CustomText, Stri
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        String regex = "^[a-zA-Z_]{6,255}$";
+        String regex = "^[a-zA-Z_0-9!@#$%]{6,255}$";
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(s).matches();
     }
