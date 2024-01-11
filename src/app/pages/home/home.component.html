@@ -1,1 +1,7 @@
-<p>home works!</p>,
+<h2>
+  Other users Available Notes
+</h2>
+
+@if (publicNotes$ | async;as publicNotes) {
+<ds-notes-list [dsNotes]="publicNotes" />
+}

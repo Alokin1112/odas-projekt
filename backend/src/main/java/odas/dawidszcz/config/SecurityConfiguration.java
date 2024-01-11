@@ -1,5 +1,6 @@
 package odas.dawidszcz.config;
 
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import odas.dawidszcz.utils.CustomCsrfFilter;
 import odas.dawidszcz.utils.JwtAuthenticationFilter;

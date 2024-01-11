@@ -1,0 +1,21 @@
+<div *ngFor="let note of dsNotes">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon *ngIf="note.isPublic">public</mat-icon>
+      </div>
+      <mat-card-title>{{ note.title }}</mat-card-title>
+      <mat-card-subtitle>{{ note.username }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <a
+        mat-button
+        mat-raised-button
+        [routerLink]=""
+      >
+        <mat-icon>navigate</mat-icon>
+        Go to details
+      </a>
+    </mat-card-actions>
+  </mat-card>
+</div>

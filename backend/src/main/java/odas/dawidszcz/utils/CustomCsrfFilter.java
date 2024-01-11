@@ -15,6 +15,7 @@ import java.io.IOException;
 public class CustomCsrfFilter extends OncePerRequestFilter {
 
   public static final String CSRF_COOKIE_NAME = "XSRF-TOKEN";
+  public static final String CSRF_HEADER_NAME = "X-XSRF-TOKEN";
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -24,12 +25,16 @@ public class CustomCsrfFilter extends OncePerRequestFilter {
 
     if (csrf != null) {
 
-      Cookie cookie = WebUtils.getCookie(request, CSRF_COOKIE_NAME);
+      Cookie cookie = WebUtils.getCookie(request, CSRF_HEADER_NAME);
       String token = csrf.getToken();
 
+      System.out.println("COOKIE");
+
       if (cookie == null || token != null && !token.equals(cookie.getValue())) {
+        System.out.println("2");
         cookie = new Cookie(CSRF_COOKIE_NAME, token);
         cookie.setPath("/");
+        cookie.setHttpOnly(false);
         response.addCookie(cookie);
       }
     }

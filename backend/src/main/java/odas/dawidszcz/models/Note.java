@@ -33,7 +33,6 @@ public class Note {
     private byte[] iv;
 
     @Column(name = "is_public")
-    @JsonIgnore
     private boolean isPublic;
 
     @Column

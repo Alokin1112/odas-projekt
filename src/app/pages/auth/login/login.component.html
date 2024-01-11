@@ -45,28 +45,30 @@
       }
     </form>
 
-    @if (token) {
-    <mat-form-field>
-      <input
-        matInput
-        type="text"
-        [formControl]="tfaControl"
-        placeholder="Token"
-        maxlength="6"
-      >
-      <mat-error *ngIf="tfaControl.hasError('required')">Token is required</mat-error>
-      <mat-error *ngIf="tfaControl.hasError('minlength') || form.get('password').hasError('maxlength')">Token must be at
-        exactly 6 characterslong</mat-error>
-      <mat-error *ngIf="form.get('username').hasError('pattern')">Token must be only numbers</mat-error>
-    </mat-form-field>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="handleTokenSubmit()"
-      type="button"
-      [disabled]="form.invalid || tfaControl.invalid"
-    >Login</button>
-
+    @if (!!token) {
+    <div class="form">
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          [formControl]="tfaControl"
+          placeholder="Token"
+          maxlength="6"
+        >
+        <mat-error *ngIf="tfaControl.hasError('required')">Token is required</mat-error>
+        <mat-error *ngIf="tfaControl.hasError('minlength') || form.get('password').hasError('maxlength')">Token must be
+          at
+          exactly 6 characterslong</mat-error>
+        <mat-error *ngIf="form.get('username').hasError('pattern')">Token must be only numbers</mat-error>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="handleTokenSubmit()"
+        type="button"
+        [disabled]="form.invalid || tfaControl.invalid"
+      >Login</button>
+    </div>
     }
 
   </mat-card-content>

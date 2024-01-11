@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -46,6 +46,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private cdRef: ChangeDetectorRef,
   ) { }
 
   handleSubmit() {
@@ -60,6 +61,7 @@ export class LoginComponent {
         })
       ).subscribe((token) => {
         this.token = token;
+        this.cdRef.detectChanges();
       });
     }
   }

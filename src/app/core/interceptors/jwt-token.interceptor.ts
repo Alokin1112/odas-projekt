@@ -1,29 +1,31 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from "@angular/common/http";
+import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { ROUTES_PATH } from "@core/constants/routes-path.const";
 import { AuthService } from "@core/services/auth.service";
 import { Observable } from "rxjs";
 
-@Injectable()
-export class JwtTokenInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private roter: Router) { }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+export const JwtTokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-    if (!this.authService.token) {
-      void this.roter.navigateByUrl(`/${ROUTES_PATH.AUTH}/${ROUTES_PATH.LOGIN}`);
-      return next.handle(req);
-    }
+  console.log("XXXX")
 
-    req = req.clone({
-      setHeaders: {
-        'Authorization': `bearer ${this.authService.token}`,
-      }
-    });
-
-    return next.handle(req).pipe(
-
-    );
+  if (req.url.includes('/api/v1/auth')) {
+    return next(req);
   }
+
+  if (!authService.token) {
+    void router.navigateByUrl(`/${ROUTES_PATH.AUTH}/${ROUTES_PATH.LOGIN}`);
+    return next(req);
+  }
+
+  req = req.clone({
+    setHeaders: {
+      'Authorization': `Bearer ${authService.token}`,
+    }
+  });
+
+  return next(req);
 }
