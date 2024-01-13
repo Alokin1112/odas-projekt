@@ -1,0 +1,25 @@
+<a
+  [routerLink]="pathToAddNote"
+  mat-stroked-button
+>
+  <mat-icon>add</mat-icon>
+  Add Note
+</a>
+
+<h2>
+  Other users Available Notes
+</h2>
+
+
+@if (publicNotes$ | async;as publicNotes) {
+<ds-notes-list [dsNotes]="publicNotes" />
+}
+
+<h2>
+  Owned notes
+</h2>
+
+
+@if (ownedNotes$ | async;as ownedNotes) {
+<ds-notes-list [dsNotes]="ownedNotes" />
+}

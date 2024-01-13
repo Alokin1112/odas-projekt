@@ -1,0 +1,25 @@
+:host {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.allowed__user__control {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+
+}
+
+.preview>img {
+  max-width: 500px;
+  max-height: 800px;
+}

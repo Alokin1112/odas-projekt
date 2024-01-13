@@ -28,4 +28,10 @@ export interface JwtPayload {
   sub: string;
 }
 
+export interface CsrfInterface {
+  headerName: string,
+  parameterName: string,
+  token: string,
+}
+
 export type UserRoles = "ROLE_USER" | "ROLE_ADMIN";

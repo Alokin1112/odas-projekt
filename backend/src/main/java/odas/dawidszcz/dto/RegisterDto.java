@@ -3,11 +3,13 @@ package odas.dawidszcz.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 import odas.dawidszcz.utils.CustomText;
 import org.hibernate.validator.constraints.Length;
 
 @Data
+@Builder
 public class RegisterDto {
     @NotNull
     @NotEmpty

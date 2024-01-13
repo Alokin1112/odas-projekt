@@ -46,6 +46,10 @@ export class AuthService {
     return token ? jwtDecode(token) : null;
   }
 
+  logout(): void {
+    this.localeStorage.remove(this.KeyStorage);
+  }
+
   private isNotExpired(): boolean {
     const claims = this.claims;
     return claims ? claims.exp * 1000 > Date.now() : false;

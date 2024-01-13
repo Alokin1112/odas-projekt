@@ -25,7 +25,7 @@ public class CustomCsrfFilter extends OncePerRequestFilter {
 
     if (csrf != null) {
 
-      Cookie cookie = WebUtils.getCookie(request, CSRF_HEADER_NAME);
+      Cookie cookie = WebUtils.getCookie(request, CSRF_COOKIE_NAME);
       String token = csrf.getToken();
 
       System.out.println("COOKIE");

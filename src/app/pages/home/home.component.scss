@@ -1,3 +1,24 @@
 :host {
   display: block;
 }
+
+.space__between {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-flow: row nowrap;
+}
+
+
+.row {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.content__wrapper {
+  padding: 16px;
+}

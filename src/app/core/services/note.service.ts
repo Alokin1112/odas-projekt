@@ -38,6 +38,6 @@ export class NoteService {
   }
 
   saveNote(data: NoteDto): Observable<Note> {
-    return this.http.post<Note>(`${environment.httpBackend}${API.OWNED_NOTES}`, data);
+    return this.http.post<Note>(`${environment.httpBackend}${API.ADD_NOTE}`, data);
   }
 }

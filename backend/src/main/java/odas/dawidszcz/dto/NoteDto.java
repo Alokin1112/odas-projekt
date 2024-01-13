@@ -24,18 +24,13 @@ public class NoteDto {
     @NotNull
     @NotEmpty
     @NotBlank
-    @Pattern(regexp = "^((<(h[1-5]|i|b|img|a)(\\s+[^>]+)?>.*?<\\/(h[1-5]|i|b|img|a)>)|[^<]*)*$")
     @Length(min=1,max = 4096)
     private String text;
 
     @NotNull
-    @NotEmpty
-    @NotBlank
     private boolean isEncrypted;
 
     @NotNull
-    @NotEmpty
-    @NotBlank
     private boolean isPublic;
 
     private String password;

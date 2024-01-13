@@ -1,16 +1,14 @@
 package odas.dawidszcz.models;
 
+import jakarta.persistence.*;
+import lombok.*;
 import odas.dawidszcz.utils.Role;
 import odas.dawidszcz.utils.SecretBuilder;
+import odas.dawidszcz.utils.SymmetricEncryptionUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,6 +31,8 @@ public class User implements UserDetails {
 
     private Boolean enabled;
 
+    @Getter(AccessLevel.NONE)
+    @Column(name = "secret", length = 4096)
     private String secret;
 
     private Role role;
@@ -44,7 +44,13 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
-        this.secret = SecretBuilder.buildSecret(username,password);
+        try{
+          this.secret = SymmetricEncryptionUtil.encrypt(SecretBuilder.buildSecret(username,password));
+        }catch (Exception e){
+         System.out.println(e.getMessage()+" XXXX");
+          this.secret = SecretBuilder.buildSecret(username,password);
+        }
+//       this.secret = SecretBuilder.buildSecret(username,password);
         this.role = role;
     }
 
@@ -61,6 +67,14 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public String getSecret() {
+      try{
+      return  SymmetricEncryptionUtil.decrypt(this.secret);
+      }catch (Exception e) {
+        return this.secret;
+      }
     }
 
     @Override

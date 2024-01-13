@@ -2,7 +2,12 @@ package odas.dawidszcz.config;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import odas.dawidszcz.dto.NoteDto;
+import odas.dawidszcz.dto.RegisterDto;
 import odas.dawidszcz.repositories.UserRepository;
+import odas.dawidszcz.services.AuthenticationService;
+import odas.dawidszcz.services.NoteService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -50,4 +56,17 @@ public class AppConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(5,secureRandom);
     }
+
+  @Bean
+  CommandLineRunner commandLineRunner(NoteService noteService, AuthenticationService authenticationService) {
+    return args -> {
+      RegisterDto registerDto = RegisterDto.builder().username("dawid123").password("dawid123456").repeatPassword("dawid123456").build();
+      authenticationService.register(registerDto);
+
+      NoteDto noteDto = NoteDto.builder().title("Example").text("<b>gruby</b>").isEncrypted(false).allowedUsers(List.of()).password("").isPublic(true).build();
+      noteService.saveNote(noteDto,registerDto.getUsername());
+      NoteDto noteDto2 = NoteDto.builder().title("Example245").text("<i>pochylony </i>").isEncrypted(false).allowedUsers(List.of()).password("").isPublic(true).build();
+      noteService.saveNote(noteDto2,registerDto.getUsername());
+    };
+  }
 }

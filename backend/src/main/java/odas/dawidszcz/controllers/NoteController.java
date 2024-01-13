@@ -31,6 +31,15 @@ public class NoteController {
         return  noteService.getAllOwnedNotes(username);
     }
 
+  @PostMapping("/add")
+  public Note saveNote(@RequestBody NoteDto noteDto){
+    System.out.println("WORKS");
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    System.out.println(username);
+    return noteService.saveNote(noteDto,username);
+  }
+
     @GetMapping("/allowed")
     public List<Note> getAllowedNotes() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -42,7 +51,8 @@ public class NoteController {
         Note note = noteService.getNote(noteGetterDto.getId());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        if(note.isPublic() || !username.equals(note.getUsername()) || !note.getAllowedUsers().contains(note.getUsername())) {
+        System.out.println((note.isPublic() ? "Public":"Private") + note.getText());
+        if(!note.isPublic() && !username.equals(note.getUsername()) && !note.getAllowedUsers().contains(note.getUsername())) {
             throw new IllegalArgumentException("You don't have permission to this resource");
         }
         if(noteGetterDto.getPassword()!=null){
@@ -52,10 +62,4 @@ public class NoteController {
         }
     }
 
-    @PostMapping("")
-    public Note saveNote(@RequestBody NoteDto noteDto){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        return noteService.saveNote(noteDto,username);
-    }
 }

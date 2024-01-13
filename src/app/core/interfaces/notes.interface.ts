@@ -2,8 +2,8 @@ export interface Note {
   id: number;
   title: string;
   text: string;
-  isEncrypted: boolean;
-  isPublic: boolean;
+  encrypted: boolean;
+  public: boolean;
   username: string;
 }
 

@@ -9,7 +9,6 @@ export class SnackBarInterceptor implements HttpInterceptor {
   constructor(private snackBar: MatSnackBar) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('works jwt')
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         this.snackBar.open('An HTTP error occurred', 'Close', {

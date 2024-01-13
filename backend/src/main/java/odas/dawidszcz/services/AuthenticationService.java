@@ -4,8 +4,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import odas.dawidszcz.dto.*;
 import odas.dawidszcz.models.User;
@@ -16,9 +14,7 @@ import org.jboss.aerogear.security.otp.Totp;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,9 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +53,9 @@ public class AuthenticationService  {
     }
 
     public AuthenticationResponse login(LoginDto loginDto){
+      if(  loginDto.getUsername().endsWith(AUTHENTICATION_SUFFIX)){
+        throw new RuntimeException("Incorrect authorization data");
+      }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(),loginDto.getPassword())
         );
@@ -69,6 +66,9 @@ public class AuthenticationService  {
         return new AuthenticationResponse(token,"TFA IS REQUIRED");
     }
     public AuthenticationResponse verifyCode(VerificationRequest verificationRequest) {
+      if(  verificationRequest.getUsername().endsWith(AUTHENTICATION_SUFFIX)){
+        throw new RuntimeException("Incorrect authorization data");
+      }
         User user = (User) loadUserByUsername(verificationRequest.getUsername());
         User userForCheck = new User(user.getUsername() + AUTHENTICATION_SUFFIX);
         if(!jwtService.isTokenValid(verificationRequest.getToken(),userForCheck)){

@@ -10,7 +10,6 @@ export const JwtTokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, ne
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  console.log("XXXX")
 
   if (req.url.includes('/api/v1/auth')) {
     return next(req);

@@ -1,20 +1,19 @@
 package odas.dawidszcz.config;
 
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
-import odas.dawidszcz.utils.CustomCsrfFilter;
 import odas.dawidszcz.utils.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -27,13 +26,13 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors().and()
                 .csrf()
-                .ignoringRequestMatchers("/api/v1/auth/**")
-                .csrfTokenRepository(csrfTokenRepository())
-                .and()
-                .addFilterAfter(new CustomCsrfFilter(), CsrfFilter.class)
+//                 .csrfTokenRepository(this.csrfTokenRepository())
+          .disable()
+//                  .and()
                 .authorizeRequests()
                 .requestMatchers("/api/v1/auth/**")
                 .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/csrf/token").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -46,9 +45,10 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-  private CsrfTokenRepository csrfTokenRepository() {
-    HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-    repository.setHeaderName(CustomCsrfFilter.CSRF_COOKIE_NAME);
+  @Bean
+  public CsrfTokenRepository csrfTokenRepository() {
+    CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+    repository.setCookiePath("/");
     return repository;
   }
 }

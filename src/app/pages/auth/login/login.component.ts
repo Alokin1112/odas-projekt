@@ -32,6 +32,8 @@ import { Subject, takeUntil, take, map, catchError, of } from 'rxjs';
 export class LoginComponent {
   token: string;
 
+
+  registerLink = `/${ROUTES_PATH.AUTH}/${ROUTES_PATH.REGISTER}`;
   private readonly patternForForm = /^[a-zA-Z_0-9!@#$%]{6,255}$/;
 
   tfaControl = this.fb.control(null as string, [Validators.required, Validators.minLength(6), Validators.maxLength(6), Validators.pattern(/^[0-9]{6}$/)]);

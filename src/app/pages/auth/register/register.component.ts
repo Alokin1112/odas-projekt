@@ -10,10 +10,10 @@ import { Router, RouterModule } from '@angular/router';
 import { ROUTES_PATH } from '@core/constants/routes-path.const';
 import { RegisterDto } from '@core/interfaces/auth.interface';
 import { AuthService } from '@core/services/auth.service';
-import { passwordMatchValidator } from '@pages/auth/validators/passwords-must-match.validator';
-import { Subject, catchError, map, of, takeUntil } from 'rxjs';
+import { passwordCannotBeEqualToUsernameValidator, passwordMatchValidator } from '@pages/auth/validators/passwords-must-match.validator';
+import { Observable, Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { take } from 'rxjs/internal/operators/take';
-
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 @Component({
   selector: 'ds-register',
   standalone: true,
@@ -26,6 +26,7 @@ import { take } from 'rxjs/internal/operators/take';
     MatIconModule,
     MatCardModule,
     RouterModule,
+    MatProgressBarModule
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
@@ -36,6 +37,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   photoBase64: string;
   pathToLogin = `/${ROUTES_PATH.AUTH}/${ROUTES_PATH.LOGIN}`;
   onDestroy$ = new Subject<void>();
+  entropy$: Observable<number>;
 
   private readonly patternForForm = /^[a-zA-Z_0-9!@#$%]{6,255}$/;
 
@@ -43,7 +45,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     username: [null as string, [Validators.required, Validators.minLength(6), Validators.maxLength(255), Validators.pattern(this.patternForForm)]],
     password: [null as string, [Validators.required, Validators.minLength(6), Validators.maxLength(255), Validators.pattern(this.patternForForm)]],
     repeatPassword: [null as string, [Validators.required, Validators.minLength(6), Validators.maxLength(255), Validators.pattern(this.patternForForm)]],
-  }, { validators: [passwordMatchValidator] });
+  }, { validators: [passwordMatchValidator, passwordCannotBeEqualToUsernameValidator] });
 
 
   constructor(
@@ -52,10 +54,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.form.get('password').valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe((password) => {
-      const passwordEntropy = this.countPasswordEntropy(password);
-      console.log('passwordEntropy', passwordEntropy);
-    });
+    this.entropy$ = this.form.get('password').valueChanges.pipe(map((password) => password ? this.countPasswordEntropy(password) : 0));
   }
 
   ngOnDestroy(): void {

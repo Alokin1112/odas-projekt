@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import appRouting from '@app/app.routing';
 import { JwtTokenInterceptor } from '@core/interceptors/jwt-token.interceptor';
 import { AppComponent } from './app/app.component';
+import { XSRFInterceptor } from '@core/interceptors/xsrf.interceptor';
 
 
 bootstrapApplication(AppComponent, {
@@ -21,7 +22,6 @@ bootstrapApplication(AppComponent, {
         },
         provideHttpClient(
             withInterceptors([JwtTokenInterceptor]),
-            withXsrfConfiguration({ cookieName: 'XSRF-TOKEN', headerName: 'X-XSRF-TOKEN' })
         ),
         provideAnimations()
     ]

@@ -1,10 +1,13 @@
 package odas.dawidszcz.services;
 
+import com.github.javafaker.Faker;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import odas.dawidszcz.dto.NoteDto;
 import odas.dawidszcz.models.Note;
 import odas.dawidszcz.repositories.NoteRepository;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -16,9 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.sql.Array;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +29,14 @@ public class NoteService {
     private final String algorithm = "AES/CBC/PKCS5Padding";
     public Note saveNote(NoteDto noteDto, String username) {
         if(noteDto.isEncrypted() && (noteDto.isPublic() || !noteDto.getAllowedUsers().isEmpty())) {
+            System.out.println("blad");
+            System.out.println(noteDto.isEncrypted());
+            System.out.println(noteDto.isPublic());
+            System.out.println(!noteDto.getAllowedUsers().isEmpty());
             throw new IllegalArgumentException("Encrypted messages cannot be shared");
         }
         System.out.println("XXXX");
-        String text = noteDto.getText();
+        String text = this.sanitizeHtml(noteDto.getText());
         byte[] iv = {};
         if(noteDto.isEncrypted()){
             try {
@@ -58,19 +63,27 @@ public class NoteService {
     }
 
     public List<Note> getAllPublicNotes() {
-        return noteRepository.findAllByIsPublicIsTrue();
+      List<Note> notes =noteRepository.findAllByIsPublicIsTrue();
+      notes.forEach((note) -> note.setText(null));
+      return notes;
     }
 
     public List<Note> getAllOwnedNotes(String username){
-        return noteRepository.findAllByUsername(username);
+      List<Note> notes =noteRepository.findAllByUsername(username);
+      notes.forEach((note) -> note.setText(null));
+      return notes;
     }
 
     public List<Note> getAllAllowedNotes(String username) {
-        return noteRepository.findAllByAllowedUsersContaining(username);
+      List<Note> notes =noteRepository.findAllByAllowedUsersContaining(username);
+      notes.forEach((note) -> note.setText(null));
+      return notes;
     }
 
     public Note getNote(Integer id){
-        return noteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("No note with id: " + id));
+        Note  note =noteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("No note with id: " + id));
+        note.setText(this.sanitizeHtml(note.getText()));
+        return note;
     }
 
     public Note getDecryptedNote(Integer id,String password){
@@ -84,10 +97,15 @@ public class NoteService {
             cipher.init(Cipher.DECRYPT_MODE, getKey(password), new IvParameterSpec(note.getIv()));
             byte[] plainText = cipher.doFinal(Base64.getDecoder()
                     .decode(encryptedText));
-            note.setText(new String(plainText));
+            note.setText(this.sanitizeHtml(new String(plainText)));
+            note.setEncrypted(false);
             return note;
         }catch (Exception e) {
-            throw  new IllegalArgumentException(e.getMessage());
+          Random r = new SecureRandom();
+          Faker faker = new Faker(Locale.ENGLISH,r);
+          note.setText(this.sanitizeHtml(faker.chuckNorris().fact()));
+          note.setEncrypted(false);
+          return  note;
         }
     }
 
@@ -102,4 +120,17 @@ public class NoteService {
         new SecureRandom().nextBytes(iv);
         return new IvParameterSpec(iv);
     }
+
+  private String sanitizeHtml(String dirtyHtml) {
+    // Create a custom Whitelist allowing specific HTML tags and attributes
+    Safelist whitelist = new Safelist()
+      .addTags("h1", "h2", "h3", "h4", "h5", "b", "i", "img", "a")
+      .addAttributes("a", "href") // Allow 'href' attribute for 'a' tag
+      .addAttributes("img", "src"); // Allow 'src' attribute for 'img' tag
+
+    // Clean the HTML using Jsoup
+    String cleanHtml = Jsoup.clean(dirtyHtml, whitelist);
+
+    return cleanHtml;
+  }
 }

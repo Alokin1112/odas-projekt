@@ -2,7 +2,9 @@
   <mat-card>
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon *ngIf="note.isPublic">public</mat-icon>
+        <mat-icon>
+          description
+        </mat-icon>
       </div>
       <mat-card-title>{{ note.title }}</mat-card-title>
       <mat-card-subtitle>{{ note.username }}</mat-card-subtitle>
@@ -10,10 +12,10 @@
     <mat-card-actions>
       <a
         mat-button
-        mat-raised-button
-        [routerLink]=""
+        mat-stroked-button
+        [routerLink]="linkToDetails + note?.id"
       >
-        <mat-icon>navigate</mat-icon>
+        <mat-icon>arrow_forward</mat-icon>
         Go to details
       </a>
     </mat-card-actions>

@@ -33,7 +33,20 @@
         <mat-error *ngIf="form.get('password').hasError('maxlength')">Password cannot exceed 255 characters</mat-error>
         <mat-error *ngIf="form.get('username').hasError('pattern')">Password must contain only letters and
           underscores</mat-error>
+
       </mat-form-field>
+
+      @if (entropy$ | async;as entropy) {
+      <div>
+        <mat-label>Password strength</mat-label>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="entropy/4 *100"
+          [color]="entropy > 3.2 ? 'primary' : 'warn'"
+        />
+      </div>
+      }
+
 
       <mat-form-field>
         <input
@@ -43,8 +56,12 @@
           placeholder="Repeat Password"
         >
         <mat-error *ngIf="form.get('repeatPassword').hasError('required')">Repeat Password is required</mat-error>
-        <mat-error *ngIf="form.hasError('passwordMatch')">Passwords do not match</mat-error>
       </mat-form-field>
+      <mat-error *ngIf="form.get('password').touched && form.hasError('passwordMatch')">Passwords do not
+        match</mat-error>
+      <mat-error *ngIf="form.get('password').touched &&form.hasError('passwordEqualToUsername')">Password cannot be the
+        same as
+        username</mat-error>
 
       @if(!photoBase64){
       <button

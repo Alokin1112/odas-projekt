@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { ROUTES_PATH } from '@core/constants/routes-path.const';
 import { Note } from '@core/interfaces/notes.interface';
 
 @Component({
@@ -19,4 +20,6 @@ import { Note } from '@core/interfaces/notes.interface';
 export class NotesListComponent {
 
   @Input() dsNotes: Note[];
+
+  linkToDetails = `/${ROUTES_PATH.HOME}/${ROUTES_PATH.DETAILS}/`;
 }

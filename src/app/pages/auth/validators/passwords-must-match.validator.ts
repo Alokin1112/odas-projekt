@@ -6,3 +6,9 @@ export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): V
 
   return password !== repeatPassword ? { passwordMismatch: true } : null;
 }
+
+export const passwordCannotBeEqualToUsernameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const password = control.get('password')?.value as string;
+  const username = control.get('username')?.value as string;
+  return password === username ? { passwordEqualToUsername: true } : null;
+}

@@ -24,7 +24,7 @@ public class SecretBuilder {
 
     // Metoda do generowania losowej soli
     private static String generateRandomSalt() {
-        int saltLength = 32;
+        int saltLength = 64;
         StringBuilder salt = new StringBuilder();
         Random random = new SecureRandom();
 

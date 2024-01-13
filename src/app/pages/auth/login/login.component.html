@@ -35,6 +35,8 @@
           underscores</mat-error>
       </mat-form-field>
 
+      <a [routerLink]="registerLink">Don't have an account? Click here!</a>
+
       @if(!token){
       <button
         mat-raised-button
@@ -61,6 +63,7 @@
           exactly 6 characterslong</mat-error>
         <mat-error *ngIf="form.get('username').hasError('pattern')">Token must be only numbers</mat-error>
       </mat-form-field>
+
       <button
         mat-raised-button
         color="primary"

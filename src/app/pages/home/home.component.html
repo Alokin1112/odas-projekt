@@ -1,7 +1,16 @@
-<h2>
-  Other users Available Notes
-</h2>
+<mat-toolbar color="primary">
+  <div class="space__between">
+    <span>My App</span>
+    <button
+      mat-stroked-button
+      (click)="logout()"
+    >
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </div>
+</mat-toolbar>
 
-@if (publicNotes$ | async;as publicNotes) {
-<ds-notes-list [dsNotes]="publicNotes" />
-}
+<div class="content__wrapper">
+  <router-outlet />
+</div>
