@@ -22,7 +22,7 @@ public class Note {
     @Column
     private String title;
 
-    @Column
+    @Column(name = "text", length = 16384)
     private String text;
 
     @Column
