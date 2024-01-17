@@ -1,8 +1,9 @@
 # Build Stage
-FROM maven:3.9.6-eclipse-temurin-17-alpine as build
+FROM eclipse-temurin:17-jdk as build
 WORKDIR /app
 COPY backend/ /app
-RUN mvn clean install -DskipTests
+RUN chmod +x mvnw
+RUN ./mvnw clean install -DskipTests
 
 # Run Stage
 FROM openjdk:23-slim as run
