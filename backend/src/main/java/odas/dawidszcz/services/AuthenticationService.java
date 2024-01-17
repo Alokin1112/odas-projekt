@@ -78,11 +78,9 @@ public class AuthenticationService  {
         if ( !totp.verify(verificationRequest.getCode()) || !isCodeValid(verificationRequest.getCode())){
             throw new BadCredentialsException("Invalid username, password or verification code.");
         }
-        System.out.println("zzz");
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(verificationRequest.getUsername(),verificationRequest.getPassword())
         );
-        System.out.println("hahaha");
         String jwtToken = jwtService.generateToken(user);
         Utils.WaitRandomTime();
         return new AuthenticationResponse(jwtToken,"");

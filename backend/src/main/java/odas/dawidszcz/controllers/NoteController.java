@@ -33,10 +33,8 @@ public class NoteController {
 
   @PostMapping("/add")
   public Note saveNote(@RequestBody NoteDto noteDto){
-    System.out.println("WORKS");
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
-    System.out.println(username);
     return noteService.saveNote(noteDto,username);
   }
 
@@ -51,7 +49,6 @@ public class NoteController {
         Note note = noteService.getNote(noteGetterDto.getId());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        System.out.println((note.isPublic() ? "Public":"Private") + note.getText());
         if(!note.isPublic() && !username.equals(note.getUsername()) && !note.getAllowedUsers().contains(note.getUsername())) {
             throw new IllegalArgumentException("You don't have permission to this resource");
         }

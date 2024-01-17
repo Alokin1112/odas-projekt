@@ -47,7 +47,6 @@ public class User implements UserDetails {
         try{
           this.secret = SymmetricEncryptionUtil.encrypt(SecretBuilder.buildSecret(username,password));
         }catch (Exception e){
-         System.out.println(e.getMessage()+" XXXX");
           this.secret = SecretBuilder.buildSecret(username,password);
         }
 //       this.secret = SecretBuilder.buildSecret(username,password);

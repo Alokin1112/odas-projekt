@@ -29,13 +29,8 @@ public class NoteService {
     private final String algorithm = "AES/CBC/PKCS5Padding";
     public Note saveNote(NoteDto noteDto, String username) {
         if(noteDto.isEncrypted() && (noteDto.isPublic() || !noteDto.getAllowedUsers().isEmpty())) {
-            System.out.println("blad");
-            System.out.println(noteDto.isEncrypted());
-            System.out.println(noteDto.isPublic());
-            System.out.println(!noteDto.getAllowedUsers().isEmpty());
             throw new IllegalArgumentException("Encrypted messages cannot be shared");
         }
-        System.out.println("XXXX");
         String text = this.sanitizeHtml(noteDto.getText());
         byte[] iv = {};
         if(noteDto.isEncrypted()){

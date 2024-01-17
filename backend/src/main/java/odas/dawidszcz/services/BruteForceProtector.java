@@ -34,13 +34,11 @@ public class BruteForceProtector {
             attempts = 0;
         }
         attempts++;
-        System.out.println(attempts + "  " + address);
         attemptsCache.put(address,attempts);
     }
 
     public boolean isBlocked() {
         try {
-            System.out.println(attemptsCache.get(getClientIP()) >= MAX_ATTEMPTS ? "Nie moze":"Jeszcze moze");
             return attemptsCache.get(getClientIP()) >= MAX_ATTEMPTS;
         } catch (final Exception e) {
             return false;
