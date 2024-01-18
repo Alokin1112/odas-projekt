@@ -72,11 +72,11 @@ public class AuthenticationService  {
         User user = (User) loadUserByUsername(verificationRequest.getUsername());
         User userForCheck = new User(user.getUsername() + AUTHENTICATION_SUFFIX);
         if(!jwtService.isTokenValid(verificationRequest.getToken(),userForCheck)){
-            throw new BadCredentialsException("Invalid token");
+            throw new BadCredentialsException("Incorrect authorization data");
         }
         Totp totp = new Totp(user.getSecret());
         if ( !totp.verify(verificationRequest.getCode()) || !isCodeValid(verificationRequest.getCode())){
-            throw new BadCredentialsException("Invalid username, password or verification code.");
+            throw new BadCredentialsException("Incorrect authorization data");
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(verificationRequest.getUsername(),verificationRequest.getPassword())
