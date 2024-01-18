@@ -67,6 +67,8 @@ public class AppConfig {
       noteService.saveNote(noteDto,registerDto.getUsername());
       NoteDto noteDto2 = NoteDto.builder().title("Example245").text("<i>pochylony </i>").isEncrypted(false).allowedUsers(List.of()).password("").isPublic(true).build();
       noteService.saveNote(noteDto2,registerDto.getUsername());
+      NoteDto noteDto3 = NoteDto.builder().title("Tylko dla specjalnych <3").text("<i>pochylony </i>").isEncrypted(false).allowedUsers(List.of("uzytkownik")).password("").isPublic(false).build();
+      noteService.saveNote(noteDto3,registerDto.getUsername());
     };
   }
 }
