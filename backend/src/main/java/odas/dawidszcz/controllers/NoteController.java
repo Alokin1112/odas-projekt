@@ -49,7 +49,7 @@ public class NoteController {
         Note note = noteService.getNote(noteGetterDto.getId());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        if(!note.isPublic() && !username.equals(note.getUsername()) && !note.getAllowedUsers().contains(note.getUsername())) {
+        if(!note.isPublic() && !username.equals(note.getUsername()) && !note.getAllowedUsers().contains(username)) {
             throw new IllegalArgumentException("You don't have permission to this resource");
         }
         if(noteGetterDto.getPassword()!=null){
